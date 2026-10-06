@@ -1,0 +1,154 @@
+/* ============================================================================
+   Trident — design tokens
+   Light + dark palettes, motion curves, elevation and brand ramps.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Brand ramp (sharp electric cyan / cerulean / teal — matching shader & source) */
+  --brand-500: #0ea5e9;
+  --brand-600: #0284c7;
+  --brand-400: #38bdf8;
+  --teal-400: #2dd4bf;
+  --cyan-400: #38bdf8;
+  --brand-gradient: linear-gradient(135deg, #0284c7 0%, #0ea5e9 52%, #14b8a6 100%);
+
+  /* Surfaces */
+  --background: #fbfcfe;
+  --background-alt: #f2f5fa;
+  --surface: #ffffff;
+  --surface-2: #f6f8fc;
+  --surface-3: #eef2f8;
+  --overlay: rgba(15, 20, 30, 0.38);
+
+  /* Text */
+  --foreground: #0b0d12;
+  --text-secondary: #47505f;
+  --text-muted: #6b7482;
+  --text-faint: #98a1b0;
+  --text-inverse: #ffffff;
+
+  /* Lines */
+  --border: #e3e8f0;
+  --border-strong: #d2dae7;
+  --input: #e9edf5;
+  --ring: rgba(47, 107, 255, 0.45);
+
+  /* Semantic */
+  --primary: #0b0d12;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --accent: #2f6bff;
+  --accent-soft: rgba(47, 107, 255, 0.1);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #e5484d;
+  --danger-soft: rgba(229, 72, 77, 0.12);
+
+  /* Sidebar */
+  --sidebar: #f4f7fc;
+  --sidebar-2: #eaf0f9;
+  --sidebar-foreground: #0b0d12;
+  --sidebar-muted: #64708a;
+  --sidebar-border: #e3e8f0;
+  --sidebar-accent: #ffffff;
+  --sidebar-width: 280px;
+  --sidebar-width-collapsed: 76px;
+
+  /* Geometry */
+  --r-xs: 8px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-full: 999px;
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px rgba(11, 13, 18, 0.06);
+  --shadow-sm: 0 2px 6px rgba(11, 13, 18, 0.07), 0 1px 2px rgba(11, 13, 18, 0.05);
+  --shadow-md: 0 8px 20px -6px rgba(11, 13, 18, 0.16), 0 2px 6px rgba(11, 13, 18, 0.06);
+  --shadow-lg: 0 18px 44px -12px rgba(11, 13, 18, 0.24), 0 4px 12px rgba(11, 13, 18, 0.07);
+  --shadow-xl: 0 32px 70px -18px rgba(11, 13, 18, 0.3), 0 8px 20px rgba(11, 13, 18, 0.08);
+  --shadow-glow: none;
+
+  /* Motion */
+  --dur-xs: 110ms;
+  --dur-sm: 160ms;
+  --dur-md: 240ms;
+  --dur-lg: 380ms;
+  --dur-xl: 520ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.42, 0.64, 1);
+  --ease-swift: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Type */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --topbar-h: 60px;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Jet black, exactly as ai-chat/app/globals.css specifies. */
+  --background: #000000;
+  --background-alt: #000000;
+  --surface: #09090b;
+  --surface-2: #18181b;
+  --surface-3: #27272a;
+  --overlay: rgba(0, 0, 0, 0.8);
+
+  --foreground: #fafafa;
+  --text-secondary: #d4d4d8;
+  --text-muted: #a1a1aa;
+  --text-faint: #71717a;
+  --text-inverse: #000000;
+
+  --border: #27272a;
+  --border-strong: #3f3f46;
+  --input: #27272a;
+  --ring: rgba(56, 189, 248, 0.45);
+
+  --primary: #fafafa;
+  --primary-foreground: #18181b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --accent: #38bdf8;
+  --accent-soft: rgba(56, 189, 248, 0.12);
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #ff6369;
+  --danger-soft: rgba(255, 99, 105, 0.14);
+
+  /* Jet black sidebar with crisp line, exactly as requested */
+  --sidebar: #000000;
+  --sidebar-2: #09090b;
+  --sidebar-foreground: #fafafa;
+  --sidebar-muted: #a1a1aa;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-accent: #18181b;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 10px 24px -8px rgba(0, 0, 0, 0.75), 0 2px 6px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 22px 50px -14px rgba(0, 0, 0, 0.85), 0 4px 14px rgba(0, 0, 0, 0.55);
+  --shadow-xl: 0 36px 80px -20px rgba(0, 0, 0, 0.9), 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-glow: none;
+}
+
+/* Provider brand colours (used by the model picker and provider chips) */
+:root {
+  --p-anthropic: #d97757;
+  --p-openai: #10a37f;
+  --p-google: #4285f4;
+  --p-meta: #0866ff;
+  --p-xai: #e7e9ea;
+  --p-mistral: #fa520f;
+  --p-deepseek: #4d6bfe;
+  --p-qwen: #0891b2;
+  --p-perplexity: #20b8cd;
+}

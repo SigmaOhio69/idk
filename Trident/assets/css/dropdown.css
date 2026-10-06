@@ -1,0 +1,506 @@
+/* ============================================================================
+   Trident — fluid model picker
+   Provider column → nested model column, spring-driven hover pill
+   ========================================================================== */
+
+/* ── Trigger (sits on the left of the composer bar) ─────────────────────── */
+.ms {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  max-width: 260px;
+  padding: 0 8px 0 7px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  transition: background var(--dur-sm) var(--ease-out), border-color var(--dur-sm) var(--ease-out),
+    color var(--dur-sm) var(--ease-out), transform var(--dur-sm) var(--ease-spring);
+}
+.ms:hover {
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+.ms:active {
+  transform: scale(0.975);
+}
+.ms.is-open {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: var(--foreground);
+}
+
+.ms__logo {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border-radius: 5px;
+}
+.ms__logo svg {
+  width: 15px;
+  height: 15px;
+}
+.ms__text {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+.ms__model {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ms__provider {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.ms__chev {
+  display: grid;
+  place-items: center;
+  width: 13px;
+  height: 13px;
+  flex: none;
+  color: var(--text-faint);
+  transition: transform var(--dur-md) var(--ease-spring), color var(--dur-sm) var(--ease-out);
+}
+.ms__chev svg {
+  width: 13px;
+  height: 13px;
+}
+.ms.is-open .ms__chev {
+  transform: rotate(180deg);
+  color: var(--text-secondary);
+}
+
+/* ── Portal + panel ─────────────────────────────────────────────────────── */
+/* The portal must NOT cover the page — a full-bleed layer with pointer-events
+   was swallowing every click (sidebar, header, New/Chat buttons) and locking the
+   UI. Only the panel itself is interactive; the scrim is a sibling that sits
+   behind it purely to catch dismiss clicks.                                   */
+.model-portal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+}
+.model-portal:empty {
+  display: none;
+}
+
+.mp {
+  position: absolute;
+  left: var(--x, 0px);
+  bottom: var(--y, 0px);
+  width: 320px;
+  pointer-events: auto;
+  transform-origin: bottom left;
+  animation: mpScaleIn 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.mp.is-closing {
+  animation: mpScaleOut 120ms ease-out both;
+}
+@keyframes mpScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mpScaleOut {
+  to {
+    opacity: 0;
+    transform: scale(0.97) translateY(4px);
+  }
+}
+
+.mp__inner {
+  overflow: hidden;
+}
+
+.mp__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: min(60vh, 470px);
+  border-radius: 12px;
+  border: 1px solid #27272a;
+  background: #09090b;
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+/* ── Search ─────────────────────────────────────────────────────────────── */
+.mp__search {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 42px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--border);
+}
+.mp__search-icon {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  flex: none;
+  color: var(--text-faint);
+}
+.mp__search-icon svg {
+  width: 15px;
+  height: 15px;
+}
+.mp__search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  color: var(--foreground);
+}
+.mp__search input::placeholder {
+  color: var(--text-faint);
+}
+.mp__search input:focus {
+  outline: none;
+}
+/* Close affordance — replaces the esc-only hint. */
+.mp__close {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  padding: 0;
+  border-radius: 6px;
+  color: var(--text-faint);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: color 140ms ease, background 140ms ease;
+}
+.mp__close:hover {
+  color: var(--foreground);
+  background: var(--surface-3);
+}
+.mp__close svg {
+  display: block;
+}
+
+/* ── Columns ────────────────────────────────────────────────────────────── */
+
+
+/* spring highlight pill */
+/* layoutId="hover-highlight": 'absolute inset-x-1 bg-neutral-800 rounded-md' */
+.mp__pill {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 0;
+  height: var(--pill-h, 40px);
+  border-radius: 6px;
+  background: #27272a;
+  box-shadow: none;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* From fluid-dropdown.tsx:
+   Row: 'relative flex w-full items-center px-4 py-2.5 text-sm rounded-md transition-colors duration-150'
+   itemVariants: { hidden: { opacity: 0, y: -10 }, visible: { opacity: 1, y: 0 } }
+   Pill (layoutId="hover-highlight"): 'absolute inset-x-1 bg-neutral-800 rounded-md', height 40 */
+.mp__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 40px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-faint);
+  text-align: left;
+  transition: color 150ms linear;
+  animation: itemIn 240ms cubic-bezier(0.25, 0.1, 0.25, 1) both;
+  animation-delay: calc(var(--i, 0) * 18ms);
+}
+@keyframes itemIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.mp__row:hover,
+.mp__row.is-active {
+  color: var(--foreground);
+}
+.mp__row:hover .mp__logo {
+  transform: scale(1.15);
+}
+.mp__row.is-selected .mp__row-name {
+  font-weight: 650;
+}
+
+/* Provider marks render bare — no tinted box behind them. */
+.mp__logo {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  background: none;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mp__logo svg {
+  width: 18px;
+  height: 18px;
+}
+.mp__row-text {
+  flex: 1;
+  min-width: 0;
+}
+.mp__row-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 550;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mp__row-sub {
+  display: block;
+  font-size: 10.5px;
+  color: var(--text-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mp__row-chev {
+  display: grid;
+  place-items: center;
+  width: 13px;
+  height: 13px;
+  flex: none;
+  color: var(--text-faint);
+  opacity: 0.55;
+  transition: opacity var(--dur-sm) var(--ease-out), transform var(--dur-sm) var(--ease-out);
+}
+.mp__row-chev svg {
+  width: 13px;
+  height: 13px;
+}
+.mp__row.is-active .mp__row-chev {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.mp__empty {
+  padding: 18px 12px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--text-faint);
+}
+
+/* ── Model column (nested) ──────────────────────────────────────────────── */
+/* ── Single fluid list ──────────────────────────────────────────────────── */
+/* Scrollbar is hidden entirely — the reference has no visible track. */
+.mp__list {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  padding: 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.mp__list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* The expanded inline model group. No left border, no filled background —
+   the divider lines were noise; separation comes from spacing alone. */
+.mp__models {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 0 8px;
+  animation: subFade var(--dur-sm) var(--ease-out) both;
+}
+@keyframes subFade {
+  from {
+    opacity: 0;
+    height: 0;
+  }
+  to {
+    opacity: 1;
+    height: auto;
+  }
+}
+
+/* Indented under its provider; hairline-free, selection reads via a soft fill. */
+.mp__model {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  border-radius: 8px;
+  text-align: left;
+  transition: background 140ms ease;
+  animation: itemIn 200ms cubic-bezier(0.25, 0.1, 0.25, 1) both;
+  animation-delay: calc(var(--mi, 0) * 20ms);
+}
+.mp__model:hover {
+  background: var(--surface-2);
+}
+.mp__model.is-selected {
+  background: var(--surface-2);
+  box-shadow: none;
+}
+.mp__model.is-selected .mp__model-name {
+  color: var(--foreground);
+}
+
+.mp__model-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mp__model-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mp__check {
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  flex: none;
+  color: var(--accent);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--dur-sm) var(--ease-out), transform var(--dur-sm) var(--ease-spring);
+}
+.mp__check svg {
+  width: 14px;
+  height: 14px;
+}
+.mp__model.is-selected .mp__check {
+  opacity: 1;
+  transform: none;
+}
+.mp__model-desc {
+  margin-top: 3px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.mp__model-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+.mp__model-tags .chip {
+  height: 18px;
+  padding: 0 6px;
+  font-size: 10px;
+}
+
+.mp__pin {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  color: var(--text-faint);
+  opacity: 0;
+  transition: opacity var(--dur-sm) var(--ease-out), color var(--dur-sm) var(--ease-out),
+    background var(--dur-sm) var(--ease-out), transform var(--dur-sm) var(--ease-spring);
+}
+.mp__pin svg {
+  width: 13px;
+  height: 13px;
+}
+.mp__model:hover .mp__pin {
+  opacity: 1;
+}
+.mp__pin:hover {
+  background: var(--surface);
+  color: var(--warning);
+}
+.mp__model.is-pinned .mp__pin {
+  opacity: 1;
+  color: var(--warning);
+}
+.mp__model.is-pinned .mp__model-name {
+  padding-right: 22px;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+.mp__foot {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 34px;
+  padding: 0 12px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.mp__foot-sep {
+  width: 1px;
+  height: 12px;
+  background: var(--border);
+}
+.mp__foot kbd {
+  font-size: 10px;
+}
+
+@media (max-width: 620px) {
+  .mp {
+    width: min(94vw, 306px) !important;
+  }
+  .mp.is-expanded {
+    width: min(96vw, 470px) !important;
+  }
+}

@@ -1,0 +1,320 @@
+/* ============================================================================
+   Trident — settings view (ported from settings-page-design)
+   Sidebar layout with categories: Account, Preferences, Billing, Advanced
+   ========================================================================== */
+
+.settings-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.settings-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.settings-box {
+  position: relative;
+  display: flex;
+  width: 960px;
+  max-width: calc(100vw - 32px);
+  height: 640px;
+  max-height: calc(100vh - 48px);
+  background: #09090b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  transform: scale(0.97) translateY(8px);
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.settings-modal.is-open .settings-box {
+  transform: none;
+}
+
+/* ── Settings sidebar ───────────────────────────────────────────────────── */
+.settings-side {
+  width: 240px;
+  flex: none;
+  background: #000000;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-side__head {
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.settings-side__head h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fafafa;
+  margin: 0;
+}
+
+.settings-side__nav {
+  flex: 1;
+  padding: 12px 8px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.settings-side__nav::-webkit-scrollbar {
+  display: none;
+}
+
+.settings-group {
+  margin-bottom: 16px;
+}
+.settings-group__label {
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #71717a;
+}
+.settings-group__items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: transparent;
+  border: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #a1a1aa;
+  cursor: pointer;
+  text-align: left;
+  transition: background 140ms ease, color 140ms ease;
+}
+.settings-tab:hover {
+  background: #18181b;
+  color: #fafafa;
+}
+.settings-tab.is-active {
+  background: #18181b;
+  color: #fafafa;
+  font-weight: 600;
+}
+.settings-tab svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  opacity: 0.8;
+}
+.settings-tab.is-active svg {
+  opacity: 1;
+  color: #38bdf8;
+}
+
+/* ── Settings content ───────────────────────────────────────────────────── */
+.settings-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #09090b;
+}
+
+.settings-content__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.settings-content__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fafafa;
+  text-transform: capitalize;
+  margin: 0;
+}
+.settings-close {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 6px;
+  background: transparent;
+  border: 0;
+  color: #a1a1aa;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+.settings-close:hover {
+  background: #18181b;
+  color: #fafafa;
+}
+.settings-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.settings-content__body {
+  flex: 1;
+  padding: 28px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.settings-content__body::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Card styles (from components/ui/card.tsx in settings-page-design) ────── */
+.st-card {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #101014;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+.st-card__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fafafa;
+  margin: 0 0 4px;
+}
+.st-card__desc {
+  font-size: 13px;
+  color: #a1a1aa;
+  margin: 0 0 18px;
+  line-height: 1.5;
+}
+
+.st-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.st-field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #d4d4d8;
+}
+.st-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 6px;
+  background: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fafafa;
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color 140ms ease;
+}
+.st-input:focus {
+  border-color: #38bdf8;
+}
+.st-textarea {
+  width: 100%;
+  height: 80px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fafafa;
+  font-size: 13.5px;
+  outline: none;
+  resize: none;
+  line-height: 1.5;
+  transition: border-color 140ms ease;
+}
+.st-textarea:focus {
+  border-color: #38bdf8;
+}
+
+.st-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.st-row:last-child {
+  border-bottom: 0;
+}
+.st-row__text b {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #fafafa;
+}
+.st-row__text span {
+  font-size: 12.5px;
+  color: #71717a;
+}
+
+/* ── Toggle switch ──────────────────────────────────────────────────────── */
+.st-switch {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  background: #27272a;
+  border: 0;
+  cursor: pointer;
+  padding: 2px;
+  transition: background 180ms ease;
+}
+.st-switch.is-on {
+  background: #38bdf8;
+}
+.st-switch__thumb {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.st-switch.is-on .st-switch__thumb {
+  transform: translateX(16px);
+}
+
+.st-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 6px;
+  background: #fafafa;
+  color: #09090b;
+  border: 0;
+  font-size: 13px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: opacity 140ms ease;
+}
+.st-btn:hover {
+  opacity: 0.9;
+}
+.st-btn--outline {
+  background: transparent;
+  color: #fafafa;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.st-btn--outline:hover {
+  background: #18181b;
+}

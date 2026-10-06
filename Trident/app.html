@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content="Trident — a unified chat interface for frontier models." />
+    <title>Trident</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./assets/css/tokens.css" />
+    <link rel="stylesheet" href="./assets/css/base.css" />
+    <link rel="stylesheet" href="./assets/css/auth.css" />
+    <link rel="stylesheet" href="./assets/css/layout.css" />
+    <link rel="stylesheet" href="./assets/css/sidebar.css" />
+    <link rel="stylesheet" href="./assets/css/chat.css" />
+    <link rel="stylesheet" href="./assets/css/dropdown.css" />
+    <link rel="stylesheet" href="./assets/css/profile.css" />
+  </head>
+
+  <body>
+    <!-- ══════════════════════════════  AUTH  ══════════════════════════════ -->
+    <section class="auth" id="auth" aria-label="Sign in to Trident">
+      <!-- Left side: Login form from login-02 -->
+      <div class="auth__side">
+        <a class="auth__back" href="index.html" id="authBack">
+          <span id="authBackIcon"></span>
+          <span class="brand-mark" style="width: 22px; height: 22px; border-radius: 6px;"></span>
+          <span style="font-weight: 600; font-size: 15px; color: var(--foreground); margin-left: 4px;">Trident</span>
+          <span style="margin-left: 8px; font-size: 12px; color: var(--text-faint);">· Back to home</span>
+        </a>
+
+        <div class="auth__card">
+          <div class="auth__tabs" role="tablist" aria-label="Authentication mode">
+            <button class="auth__tab is-active" type="button" role="tab" data-mode="login" aria-selected="true">
+              Login
+            </button>
+            <button class="auth__tab" type="button" role="tab" data-mode="signup" aria-selected="false">Sign up</button>
+            <span class="auth__tab-pill" aria-hidden="true"></span>
+          </div>
+
+          <div class="auth__head">
+            <h1 id="authTitle">Login to your account</h1>
+            <p id="authSubtitle">Enter your email below to login to your account</p>
+          </div>
+
+          <form class="auth__form" id="authForm" novalidate>
+            <div class="field" data-field="name" hidden>
+              <label for="authName">Name</label>
+              <div class="field__box">
+                <input id="authName" name="name" type="text" placeholder="Ada Lovelace" autocomplete="name" />
+              </div>
+              <p class="field__error" data-error="name"></p>
+            </div>
+
+            <div class="field" data-field="email">
+              <label for="authEmail">Email</label>
+              <div class="field__box">
+                <input id="authEmail" name="email" type="email" placeholder="m@example.com" autocomplete="email" />
+              </div>
+              <p class="field__error" data-error="email"></p>
+            </div>
+
+            <div class="field" data-field="password">
+              <div class="field__label-row">
+                <label for="authPassword">Password</label>
+                <a class="field__forgot" href="#" id="authForgot">Forgot your password?</a>
+              </div>
+              <div class="field__box">
+                <input
+                  id="authPassword"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  autocomplete="current-password"
+                />
+                <button class="field__peek" type="button" id="authPeek" aria-label="Show password" tabindex="0"></button>
+              </div>
+              <p class="field__error" data-error="password"></p>
+            </div>
+
+            <div class="field" data-field="confirm" hidden>
+              <label for="authConfirm">Confirm password</label>
+              <div class="field__box">
+                <input id="authConfirm" name="confirm" type="password" placeholder="••••••••" autocomplete="new-password" />
+              </div>
+              <p class="field__error" data-error="confirm"></p>
+            </div>
+
+            <div class="auth__row" data-login-only>
+              <label class="check">
+                <input type="checkbox" id="authRemember" checked />
+                <span class="check__box" aria-hidden="true"></span>
+                <span>Remember me</span>
+              </label>
+            </div>
+
+            <button class="btn btn--primary btn--block" type="submit" id="authSubmit">
+              <span class="btn__spinner" aria-hidden="true"></span>
+              <span class="btn__label">Login</span>
+            </button>
+
+            <div class="auth__or"><span>Or continue with</span></div>
+
+            <button class="btn btn--ghost btn--block" type="button" id="authGithub">
+              <span class="btn__icon" id="authGithubIcon"></span>
+              <span>Login with GitHub</span>
+            </button>
+          </form>
+
+          <p class="auth__alt" id="authAlt">
+            <span>Don't have an account?</span>
+            <a href="#" id="authSwitch">Sign up</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Right side: Shader animation from shader-gradient-component -->
+      <div class="auth__panel" aria-hidden="true">
+        <div class="auth__shader" id="authShader"></div>
+        <div class="auth__overlay">
+          <div class="auth__hero">
+            <h2>The future is <span class="auth__highlight">now</span></h2>
+            <p>
+              Route across Anthropic, OpenAI, Google, Meta, xAI, Mistral, DeepSeek, Qwen and Perplexity in a single thread.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════  APP  ══════════════════════════════ -->
+    <div class="app" id="app" hidden>
+      <!-- Sidebar ------------------------------------------------------- -->
+      <aside class="sidebar" id="sidebar" aria-label="Workspace">
+        <div class="sidebar__head">
+          <button class="ws" type="button" id="wsButton" aria-haspopup="dialog">
+            <span class="ws__mark" id="wsMark"></span>
+            <span class="ws__text">
+              <span class="ws__name">Trident Labs</span>
+              <span class="ws__plan">Pro workspace</span>
+            </span>
+            <span class="ws__chev" id="wsChev"></span>
+          </button>
+          <button class="icon-btn sidebar__collapse" type="button" id="sidebarCollapse" aria-label="Collapse sidebar">
+            <span class="collapse-glyph" aria-hidden="true"><i></i><i></i></span>
+          </button>
+        </div>
+
+        <div class="sidebar__search">
+          <span class="sidebar__search-icon" id="sidebarSearchIcon"></span>
+          <input type="search" id="sidebarSearch" placeholder="Search threads…" aria-label="Search threads" />
+          <kbd class="sidebar__kbd">⌘K</kbd>
+        </div>
+
+        <div class="sidebar__scroll" id="sidebarScroll">
+          <button class="new-chat" type="button" id="newChat">
+            <span class="new-chat__icon" id="newChatIcon"></span>
+            <span class="new-chat__label">New thread</span>
+          </button>
+
+          <nav class="nav" id="navPrimary" aria-label="Primary"></nav>
+
+          <section class="group" data-group="threads">
+            <button class="group__head" type="button" data-collapse="threads" aria-expanded="true">
+              <span class="group__chev" aria-hidden="true"></span>
+              <span class="group__label">Recent</span>
+              <span class="group__count" id="threadCount">0</span>
+            </button>
+            <div class="group__body" id="groupThreads">
+              <div class="group__inner"><div class="nav" id="navThreads"></div></div>
+            </div>
+          </section>
+
+          <nav class="nav" id="navWorkspace" aria-label="Workspace"></nav>
+
+          <section class="group" data-group="team">
+            <button class="group__head" type="button" data-collapse="team" aria-expanded="false">
+              <span class="group__chev" aria-hidden="true"></span>
+              <span class="group__label">Team</span>
+              <span class="group__count">3</span>
+            </button>
+            <div class="group__body" id="groupTeam">
+              <div class="group__inner"><div class="nav nav--sub" id="navTeam"></div></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="sidebar__foot">
+          <button class="profile-trigger" type="button" id="profileTrigger" aria-haspopup="dialog" aria-expanded="false">
+            <span class="profile-trigger__avatar" id="profileAvatar"></span>
+            <span class="profile-trigger__text">
+              <span class="profile-trigger__name" id="profileName">—</span>
+              <span class="profile-trigger__role" id="profileRole">—</span>
+            </span>
+            <span class="profile-trigger__more" id="profileMore"></span>
+          </button>
+        </div>
+
+        <div class="sidebar__rail" id="sidebarRail" title="Drag to resize · double-click to reset" aria-hidden="true"></div>
+      </aside>
+
+      <div class="scrim" id="scrim" hidden></div>
+
+      <!-- Main ---------------------------------------------------------- -->
+      <div class="main">
+        <header class="topbar">
+          <button class="icon-btn topbar__trigger" type="button" id="topbarTrigger" aria-label="Toggle sidebar">
+            <span class="collapse-glyph" aria-hidden="true"><i></i><i></i></span>
+          </button>
+
+          <div class="topbar__title">
+            <span class="topbar__crumb" id="topbarCrumb">New thread</span>
+            <span class="topbar__badge" id="topbarBadge"></span>
+          </div>
+
+          <div class="topbar__actions">
+            <button class="btn btn--quiet" type="button" id="newChatTop">
+              <span class="btn__icon" id="newChatTopIcon"></span>
+              <span class="btn__text">New</span>
+            </button>
+            <button class="icon-btn" type="button" id="themeToggle" aria-label="Toggle theme"></button>
+            <button class="icon-btn icon-btn--avatar" type="button" id="headerAvatar" aria-label="Account"></button>
+          </div>
+        </header>
+
+        <main class="chat" id="chat">
+          <div class="chat__scroll" id="chatScroll">
+            <div class="hero" id="hero">
+              <div class="hero__glow" aria-hidden="true"></div>
+              <span class="hero__mark" id="heroMark"></span>
+              <h1 class="hero__title" id="heroTitle">What are we building today?</h1>
+              <p class="hero__sub" id="heroSub">
+                Pick a provider, choose a model, and start the thread. Trident keeps every route in one place.
+              </p>
+            </div>
+
+            <div class="messages" id="messages" role="log" aria-live="polite" aria-atomic="false"></div>
+          </div>
+
+          <div class="composer-wrap">
+            <div class="suggestions" id="suggestions"></div>
+
+            <form class="composer" id="composer" autocomplete="off">
+              <div class="composer__field">
+                <button class="composer__attach" type="button" id="attachBtn" aria-label="Attach file"></button>
+                <textarea
+                  class="composer__input"
+                  id="input"
+                  rows="1"
+                  placeholder="Message Trident…"
+                  aria-label="Message"
+                ></textarea>
+                <button class="composer__send" type="submit" id="sendBtn" aria-label="Send message" disabled></button>
+              </div>
+
+              <div class="composer__bar">
+                <div class="composer__left" id="modelSelectorHost"></div>
+                <div class="composer__right">
+                  <span class="composer__hint"><kbd>↵</kbd> send · <kbd>⇧↵</kbd> newline</span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Portals ------------------------------------------------------- -->
+    <div class="model-portal" id="modelPortal"></div>
+    <div class="profile-portal" id="profilePortal"></div>
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+
+    <script src="./assets/js/shader.js"></script>
+    <script src="./assets/js/icons.js"></script>
+    <script src="./assets/js/spring.js"></script>
+    <script src="./assets/js/avatar.js"></script>
+    <script src="./assets/js/data.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/model-selector.js"></script>
+    <script src="./assets/js/chat.js"></script>
+    <script src="./assets/js/sidebar.js"></script>
+    <script src="./assets/js/profile.js"></script>
+    <script src="./assets/js/app.js"></script>
+  </body>
+</html>
